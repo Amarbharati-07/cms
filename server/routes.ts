@@ -156,8 +156,9 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       }
 
       res.status(201).json(task);
-    } catch (error) {
-      res.status(400).json({ message: 'Invalid input' });
+    } catch (error: any) {
+      console.error('Task creation error:', error.message, error.errors || '');
+      res.status(400).json({ message: 'Invalid input', error: error.message });
     }
   });
 

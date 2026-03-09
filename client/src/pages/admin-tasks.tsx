@@ -48,7 +48,10 @@ export default function AdminTasks() {
 
   const onSubmitCreate = async (values: z.infer<typeof createTaskSchema>) => {
     try {
-      await createTask({ ...values, deadline: new Date(values.deadline) });
+      // Convert YYYY-MM-DD to ISO timestamp
+      const deadlineDate = new Date(values.deadline);
+      deadlineDate.setUTCHours(23, 59, 59, 999); // Set to end of day UTC
+      await createTask({ ...values, deadline: deadlineDate.toISOString() });
       toast({ title: "Task created successfully" });
       setOpen(false);
       form.reset();

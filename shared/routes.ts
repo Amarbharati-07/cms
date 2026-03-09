@@ -66,7 +66,10 @@ export const api = {
       create: {
         method: 'POST' as const,
         path: '/api/admin/tasks' as const,
-        input: insertTaskSchema.extend({ candidateIds: z.array(z.number()) }),
+        input: insertTaskSchema.omit({ deadline: true }).extend({ 
+          deadline: z.string().or(z.date()).transform(d => typeof d === 'string' ? new Date(d) : d),
+          candidateIds: z.array(z.number()) 
+        }),
         responses: { 201: z.any() }
       },
       list: {
