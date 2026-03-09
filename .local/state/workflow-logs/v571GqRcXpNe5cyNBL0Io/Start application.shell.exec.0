@@ -1,0 +1,53 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K7:39:38 AM [express] serving on port 5000
+7:39:43 AM [express] GET /api/auth/me 304 in 25ms :: {"id":1,"email":"admin@fieldtrack.com","role":"ADMIN"}
+7:39:43 AM [express] GET /api/admin/candidates 304 in 17ms :: [{"id":2,"email":"candidate1@fieldtrack.com","password":"$2b$10$E45x8XM6bhhB5A6mPirIBeRLgoB1wPuNglY2rZ7lO6TEdhbsYK2ga","role":"CANDIDATE","createdAt":"2026-03-09T07:32:13.666Z","profile":{"id":1,"userId":2,"fullName":"Rahul Sharma","age":24,"state":"Rajasthan","phone":"9810001001","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":3,"email":"candidate2@fieldtrack.com","password":"$2b$10$JMzB8UxY1maoyFeCF7uHxuCGDmyKBb47RjJddM5uK/K6p66bDQf7.","role":"CANDIDATE","createdAt":"2026-03-09T07:32:13.733Z","profile":{"id":2,"userId":3,"fullName":"Priya Verma","age":23,"state":"Maharashtra","phone":"9810001002","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":4,"email":"candidate3@fieldtrack.com","password":"$2b$10$tsqwuEVec6yzJOSu4rnL0uhdIhyTUHQGG28U1qYS/hh.QMpguG6yS","role":"CANDIDATE","createdAt":"2026-03-09T07:32:13.798Z","profile":{"id":3,"userId":4,"fullName":"Amit Singh","age":25,"state":"Gujarat","phone":"9810001003","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":5,"email":"candidate4@fieldtrack.com","password":"$2b$10$QoD02hK1F98gr3YF/RMoge7S4jqzuNHy2jh7TVmAAoChrrIdZWr.y","role":"CANDIDATE","createdAt":"2026-03-09T07:32:13.863Z","profile":{"id":4,"userId":5,"fullName":"Neha Patel","age":22,"state":"Uttar Pradesh","phone":"9810001004","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":6,"email":"candidate5@fieldtrack.com","password":"$2b$10$y6GLuw8SqInSKtzJLHC7.utbSHXxCz6t1idEzWcB8CxTip9A7WObG","role":"CANDIDATE","createdAt":"2026-03-09T07:32:13.927Z","profile":{"id":5,"userId":6,"fullName":"Ravi Kumar","age":26,"state":"Madhya Pradesh","phone":"9810001005","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":7,"email":"candidate6@fieldtrack.com","password":"$2b$10$Pid.oUhUjOl931K9BxCsDebjJpf20uQvDfX98fplxnPVaAGh8i9FW","role":"CANDIDATE","createdAt":"2026-03-09T07:32:13.992Z","profile":{"id":6,"userId":7,"fullName":"Sunita Devi","age":24,"state":"Bihar","phone":"9810001006","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":8,"email":"candidate7@fieldtrack.com","password":"$2b$10$R3AQwpKt4VTHMOBwLVuIiuVuSyQyB96YjcoiqgD/qj.OjcjIIFdn.","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.057Z","profile":{"id":7,"userId":8,"fullName":"Vikram Yadav","age":27,"state":"Rajasthan","phone":"9810001007","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":9,"email":"candidate8@fieldtrack.com","password":"$2b$10$AsQx3LCach0.D5sRLw85r.AYf/ckzFv9P.fce/6M4GD2G3kJcKlKC","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.121Z","profile":{"id":8,"userId":9,"fullName":"Kavita Joshi","age":23,"state":"Maharashtra","phone":"9810001008","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":10,"email":"candidate9@fieldtrack.com","password":"$2b$10$cQJILABKqdVMfnIgv6PYfu1FeDsfcabTgD2QX7qreyJ50IKf.gjZS","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.186Z","profile":{"id":9,"userId":10,"fullName":"Deepak Mishra","age":25,"state":"Gujarat","phone":"9810001009","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":11,"email":"candidate10@fieldtrack.com","password":"$2b$10$.Uypz/zqqf8s7wAazOkTg.SfG3DdmFUc.HrbYskHn5MTcW.y/ZW2O","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.250Z","profile":{"id":10,"userId":11,"fullName":"Pooja Tiwari","age":22,"state":"Uttar Pradesh","phone":"9810001010","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":12,"email":"candidate11@fieldtrack.com","password":"$2b$10$5rWa1lAdUvaU5V1YY237u.91C4HXaML/jYZ0yYVEh.KtjD/IEI.m2","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.315Z","profile":{"id":11,"userId":12,"fullName":"Suresh Rawat","age":28,"state":"Madhya Pradesh","phone":"9810001011","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":13,"email":"candidate12@fieldtrack.com","password":"$2b$10$FNPgUNysdCmhQKDQ4dqvGu48XPElyL0eFJatFRZS70e6bCZCtpwOu","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.379Z","profile":{"id":12,"userId":13,"fullName":"Anita Chauhan","age":24,"state":"Bihar","phone":"9810001012","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":14,"email":"candidate13@fieldtrack.com","password":"$2b$10$C9m2M0nDk9.tj/g0UPhE0.25WqeTiPjjLCGfcxZXi2zY0M4ja7DQW","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.442Z","profile":{"id":13,"userId":14,"fullName":"Manoj Gupta","age":26,"state":"Rajasthan","phone":"9810001013","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":15,"email":"candidate14@fieldtrack.com","password":"$2b$10$xysBNn7nEvmKzAZmuhmS4u8xeqbZAdqOdJR0cRZiFWCGP9f8i68zq","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.506Z","profile":{"id":14,"userId":15,"fullName":"Rekha Nair","age":23,"state":"Maharashtra","phone":"9810001014","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":16,"email":"candidate15@fieldtrack.com","password":"$2b$10$gFYQbliAkMvuDqi5WHDGEOsZGZWUoMQ9SzpCM2mCR65RFVOpUvPoK","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.573Z","profile":{"id":15,"userId":16,"fullName":"Ajay Pandey","age":25,"state":"Gujarat","phone":"9810001015","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":17,"email":"candidate16@fieldtrack.com","password":"$2b$10$jtWtMep6I456u4w7wU8CweQ6O1p5CEtO4Y.6wIQD.hawkHVUkkUjy","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.637Z","profile":{"id":16,"userId":17,"fullName":"Meena Kumari","age":22,"state":"Uttar Pradesh","phone":"9810001016","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":18,"email":"candidate17@fieldtrack.com","password":"$2b$10$BBl2V84fE642rUn4pb3yZOx0u8wxK4ocYEK8DlviV.bWb2TyWdjL.","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.700Z","profile":{"id":17,"userId":18,"fullName":"Rohit Bhatt","age":27,"state":"Madhya Pradesh","phone":"9810001017","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":19,"email":"candidate18@fieldtrack.com","password":"$2b$10$SpH.dtX8jtv5xz5QIaNLwOwEFOIl4iYXvX92zUm3YqGjIHnoE9FoW","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.764Z","profile":{"id":18,"userId":19,"fullName":"Shalini Singh","age":24,"state":"Bihar","phone":"9810001018","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":20,"email":"candidate19@fieldtrack.com","password":"$2b$10$eIsiV2PhAaF4zwzmhiezBOIMrT5r.KVobr.CjCSE54NUnnonYlvRy","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.828Z","profile":{"id":19,"userId":20,"fullName":"Dinesh Agarwal","age":26,"state":"Rajasthan","phone":"9810001019","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}},{"id":21,"email":"candidate20@fieldtrack.com","password":"$2b$10$maYiZ1dPi06Sm.bdPbY2qOQXY5QoH8gCxZDpGIGTKmsCkrg9ety/a","role":"CANDIDATE","createdAt":"2026-03-09T07:32:14.892Z","profile":{"id":20,"userId":21,"fullName":"Preeti Saxena","age":23,"state":"Maharashtra","phone":"9810001020","address":null,"education":null,"achievements":null,"bio":null,"profilePhoto":null,"resume":null,"certificates":null}}]
+7:39:43 AM [express] GET /api/admin/tasks 304 in 14ms :: []
+7:39:45 AM [express] POST /api/auth/login 200 in 61ms :: {"id":1,"email":"admin@fieldtrack.com","role":"ADMIN"}
+Task creation error: [
+  {
+    "code": "invalid_type",
+    "expected": "date",
+    "received": "string",
+    "path": [
+      "deadline"
+    ],
+    "message": "Expected date, received string"
+  }
+] [
+  {
+    code: [32m'invalid_type'[39m,
+    expected: [32m'date'[39m,
+    received: [32m'string'[39m,
+    path: [ [32m'deadline'[39m ],
+    message: [32m'Expected date, received string'[39m
+  }
+]
+7:39:45 AM [express] POST /api/admin/tasks 400 in 3ms :: {"message":"Invalid input","error":"[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"date\",\n    \"received\": \"string\",\n    \"path\": [\n      \"deadline\"\n    ],\n    \"message\": \"Expected date, received string\"\n  }\n]"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m7:39:56 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/login.tsx, /src/components/layout.tsx, /src/components/app-sidebar.tsx, /src/pages/candidate-attendance.tsx, /src/pages/candidate-profile.tsx, /src/pages/candidate-tasks.tsx, /src/pages/admin-candidates.tsx, /src/pages/admin-dashboard.tsx, /src/pages/admin-attendance.tsx, /src/pages/admin-tasks.tsx[22m

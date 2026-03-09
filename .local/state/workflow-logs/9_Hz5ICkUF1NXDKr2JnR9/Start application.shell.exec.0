@@ -1,0 +1,10 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K7:28:23 AM [express] serving on port 5000
+7:28:29 AM [express] GET /api/auth/me 401 in 1ms :: {"message":"Unauthorized"}
+[2m7:28:30 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33mtailwindcss-animate, @tailwindcss/typography[32m[39m
+[2m7:28:30 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+7:28:30 AM [express] GET /api/auth/me 401 in 1ms :: {"message":"Unauthorized"}
+7:28:35 AM [express] GET /api/auth/me 401 in 1ms :: {"message":"Unauthorized"}

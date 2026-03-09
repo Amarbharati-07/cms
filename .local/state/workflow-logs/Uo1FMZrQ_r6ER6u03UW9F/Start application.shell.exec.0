@@ -1,0 +1,7 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K7:32:32 AM [express] serving on port 5000
+7:32:37 AM [express] GET /api/auth/me 401 in 2ms :: {"message":"Unauthorized"}
+7:32:39 AM [express] GET /api/check-users 500 in 1ms :: {"message":"Error checking users","error":"ReferenceError: db is not defined"}
