@@ -32,9 +32,9 @@ FieldTrack is a full-stack web application for managing field candidates, their 
 ## Database Schema
 - **users**: Auth & role management
 - **candidateProfiles**: Extended candidate information
-- **tasks**: Task definitions and deadlines
+- **tasks**: Task definitions, deadlines, and required submission formats (Video, PDF, Word, Excel, Text)
 - **assignedTasks**: Task assignments to candidates
-- **submissions**: Task submissions with geolocation
+- **submissions**: Task submissions with geolocation and file validation
 - **attendance**: Attendance logs with geolocation
 - **notifications**: User notifications
 
@@ -87,12 +87,14 @@ Features:
 - `GET /api/admin/candidates` - List all candidates
 - `POST /api/admin/candidates` - Create new candidate
 - `GET /api/admin/tasks` - List all tasks
-- `POST /api/admin/tasks` - Create new task
+- `POST /api/admin/tasks` - Create new task (with requiredFormats array)
+- `PUT /api/admin/tasks/:id/review` - Review task submission
 
 ### Candidate Routes
 - `GET /api/candidate/profile` - Get candidate profile
 - `PATCH /api/candidate/profile` - Update profile
-- `GET /api/candidate/tasks` - Get assigned tasks
+- `GET /api/candidate/tasks` - Get assigned tasks (with required formats)
+- `POST /api/candidate/tasks/:id/submit` - Submit task with file upload and format validation
 
 ## Environment Variables
 ```
@@ -106,6 +108,8 @@ DATABASE_URL=<postgres-connection-string>
 - Uploaded files stored in `/uploads` directory
 - Served as static files via Express
 - Used for profile photos, resumes, and submission evidence
+- Submission uploads validated against required formats (Video, PDF, Word, Excel, Text)
+- Supported extensions: .mp4, .pdf, .doc, .docx, .xls, .xlsx, .txt
 
 ## Data Persistence
 - PostgreSQL on Replit is fully persistent
@@ -118,3 +122,15 @@ DATABASE_URL=<postgres-connection-string>
 - Vite configured as middleware for hot reloading
 - Backend uses tsx for TypeScript execution
 - All API responses validated with Zod
+
+## Submission Format Feature
+### Admin Features
+- When creating tasks, admins can select one or more required submission formats
+- Formats display in the task management dashboard with a "Required Formats" badge
+- Supported formats: Video, PDF, Word, Excel, Text
+
+### Candidate Features
+- Task cards display required submission formats clearly
+- File upload with client-side validation against required formats
+- Error messages show which formats are accepted if wrong file type is selected
+- Files are validated by both file extension and MIME type for security

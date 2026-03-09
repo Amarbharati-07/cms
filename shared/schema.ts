@@ -35,6 +35,7 @@ export const tasks = pgTable("tasks", {
   description: text("description").notNull(),
   deadline: timestamp("deadline").notNull(),
   status: text("status", { enum: ['PENDING', 'SUBMITTED', 'APPROVED', 'REJECTED'] }).notNull().default('PENDING'),
+  requiredFormats: json("required_formats").$type<string[]>().default([]),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

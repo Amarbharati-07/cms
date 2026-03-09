@@ -148,7 +148,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       const task = await storage.createTask({
         title: input.title,
         description: input.description,
-        deadline: new Date(input.deadline)
+        deadline: new Date(input.deadline),
+        requiredFormats: input.requiredFormats || []
       });
 
       for (const candidateId of input.candidateIds) {

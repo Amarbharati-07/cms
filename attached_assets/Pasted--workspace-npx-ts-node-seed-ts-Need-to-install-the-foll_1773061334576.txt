@@ -1,0 +1,64 @@
+~/workspace$ npx ts-node seed.ts
+Need to install the following packages:
+ts-node@10.9.2
+Ok to proceed? (y) y
+
+TypeError: Unknown file extension ".ts" for /home/runner/workspace/seed.ts
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:189:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:232:36)
+    at defaultLoad (node:internal/modules/esm/load:145:22)
+    at async ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:543:45)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+~/workspace$ npx ts-node --esm seed.ts
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /home/runner/workspace/seed.ts
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:189:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:232:36)
+    at defaultLoad (node:internal/modules/esm/load:145:22)
+    at async nextLoad (node:internal/modules/esm/hooks:864:22)
+    at async nextLoad (node:internal/modules/esm/hooks:864:22)
+    at async Hooks.load (node:internal/modules/esm/hooks:451:20)
+    at async handleMessage (node:internal/modules/esm/worker:196:18) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+~/workspace$ node --loader ts-node/esm seed.ts
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'ts-node' imported from /home/runner/workspace/
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at nextResolve (node:internal/modules/esm/hooks:864:28)
+    at Hooks.resolve (node:internal/modules/esm/hooks:306:30)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:638:35)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at Hooks.register (node:internal/modules/esm/hooks:167:34)
+    at initializeHooks (node:internal/modules/esm/utils:324:17) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v20.20.0
+~/workspace$ npm install ts-node typescript
+
+added 15 packages, and audited 544 packages in 1s
+
+79 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+~/workspace$ npx ts-node --esm seed.ts
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /home/runner/workspace/seed.ts
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:189:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:232:36)
+    at defaultLoad (node:internal/modules/esm/load:145:22)
+    at async nextLoad (node:internal/modules/esm/hooks:864:22)
+    at async nextLoad (node:internal/modules/esm/hooks:864:22)
+    at async Hooks.load (node:internal/modules/esm/hooks:451:20)
+    at async handleMessage (node:internal/modules/esm/worker:196:18) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+~/workspace$ 

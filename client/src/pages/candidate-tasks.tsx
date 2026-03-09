@@ -6,9 +6,25 @@ import { Badge } from "@/components/ui/badge";
 import { useCandidateTasks, useCandidateSubmitTask } from "@/hooks/use-candidate";
 import { useGeolocation } from "@/hooks/use-geolocation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, UploadCloud, Calendar, MapPin, CheckCircle2, CheckSquare } from "lucide-react";
+import { Loader2, UploadCloud, Calendar, MapPin, CheckCircle2, CheckSquare, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+
+const ALLOWED_EXTENSIONS: Record<string, string[]> = {
+  'Video': ['.mp4'],
+  'PDF': ['.pdf'],
+  'Word': ['.doc', '.docx'],
+  'Excel': ['.xls', '.xlsx'],
+  'Text': ['.txt']
+};
+
+const ALLOWED_MIMES: Record<string, string[]> = {
+  'Video': ['video/mp4'],
+  'PDF': ['application/pdf'],
+  'Word': ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  'Excel': ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+  'Text': ['text/plain']
+};
 
 export default function CandidateTasks() {
   const { data: tasks, isLoading } = useCandidateTasks();
@@ -18,11 +34,37 @@ export default function CandidateTasks() {
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
 
-  const onSubmit = async (taskId: number) => {
+  const validateFile = (file: File, requiredFormats: string[]): string | null => {
+    if (!file) return "Please attach a file";
+    if (!requiredFormats || requiredFormats.length === 0) return null;
+
+    const fileName = file.name.toLowerCase();
+    const fileExt = '.' + fileName.split('.').pop();
+    const fileMime = file.type;
+
+    for (const format of requiredFormats) {
+      const allowedExts = ALLOWED_EXTENSIONS[format] || [];
+      const allowedMimes = ALLOWED_MIMES[format] || [];
+      if (allowedExts.includes(fileExt) || allowedMimes.includes(fileMime)) {
+        return null;
+      }
+    }
+
+    return `File must be one of: ${requiredFormats.join(', ')}`;
+  };
+
+  const onSubmit = async (taskId: number, requiredFormats: string[]) => {
     if (!file) {
       toast({ variant: "destructive", title: "Error", description: "Please attach a file" });
       return;
     }
+
+    const validationError = validateFile(file, requiredFormats);
+    if (validationError) {
+      toast({ variant: "destructive", title: "Invalid file format", description: validationError });
+      return;
+    }
+
     if (!latitude || !longitude) {
       toast({ variant: "destructive", title: "Location required", description: geoError || "Please allow location access." });
       return;
@@ -73,7 +115,17 @@ export default function CandidateTasks() {
                   </div>
                 </CardHeader>
                 <CardContent className="pt-6">
-                  <p className="text-muted-foreground mb-6 leading-relaxed">{task.description}</p>
+                  <p className="text-muted-foreground mb-4 leading-relaxed">{task.description}</p>
+                  {task.requiredFormats && task.requiredFormats.length > 0 && (
+                    <div className="mb-6 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <p className="text-xs font-semibold text-purple-400 mb-2">Required Submission Format:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {task.requiredFormats.map((fmt: string) => (
+                          <Badge key={fmt} variant="secondary" className="bg-purple-500/20 text-purple-300">{fmt}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
                   {task.status === 'PENDING' || task.status === 'REJECTED' ? (
                     <Dialog open={openTaskId === task.id} onOpenChange={(val) => setOpenTaskId(val ? task.id : null)}>
@@ -87,6 +139,15 @@ export default function CandidateTasks() {
                           <DialogTitle className="font-display text-2xl">Submit Task</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-6 mt-4">
+                          {task.requiredFormats && task.requiredFormats.length > 0 && (
+                            <div className="flex items-start gap-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                              <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                              <div className="text-xs text-yellow-300">
+                                <p className="font-semibold mb-1">Accepted formats: {task.requiredFormats.join(', ')}</p>
+                                <p>Make sure your file matches one of these formats</p>
+                              </div>
+                            </div>
+                          )}
                           <div className="space-y-2">
                             <label className="text-sm font-medium">Upload File Evidence</label>
                             <input 
@@ -94,6 +155,9 @@ export default function CandidateTasks() {
                               onChange={(e) => setFile(e.target.files?.[0] || null)}
                               className="flex h-12 w-full items-center justify-center rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm text-muted-foreground file:mr-4 file:rounded-full file:border-0 file:bg-primary/20 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-primary hover:file:bg-primary/30 focus-visible:outline-none"
                             />
+                            {file && (
+                              <p className="text-xs text-muted-foreground">Selected: {file.name}</p>
+                            )}
                           </div>
 
                           <div className="bg-black/30 p-4 rounded-xl border border-white/5 space-y-3">
@@ -114,7 +178,7 @@ export default function CandidateTasks() {
 
                           <Button 
                             className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20" 
-                            onClick={() => onSubmit(task.id)}
+                            onClick={() => onSubmit(task.id, task.requiredFormats || [])}
                             disabled={isPending || geoLoading || !latitude}
                           >
                             {isPending ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}

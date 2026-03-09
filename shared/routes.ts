@@ -66,8 +66,9 @@ export const api = {
       create: {
         method: 'POST' as const,
         path: '/api/admin/tasks' as const,
-        input: insertTaskSchema.omit({ deadline: true }).extend({ 
+        input: insertTaskSchema.omit({ deadline: true, requiredFormats: true }).extend({ 
           deadline: z.string().or(z.date()).transform(d => typeof d === 'string' ? new Date(d) : d),
+          requiredFormats: z.array(z.enum(['Video', 'PDF', 'Word', 'Excel', 'Text'])).default([]),
           candidateIds: z.array(z.number()) 
         }),
         responses: { 201: z.any() }

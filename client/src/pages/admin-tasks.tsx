@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, Plus, Calendar, FileText, CheckCircle2, XCircle, CheckSquare } from "lucide-react";
+import { Loader2, Plus, Calendar, FileText, CheckCircle2, XCircle, CheckSquare, Film, FileJson, FileSpreadsheet } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
@@ -19,6 +19,7 @@ const createTaskSchema = z.object({
   title: z.string().min(3),
   description: z.string().min(10),
   deadline: z.string().refine(val => !isNaN(Date.parse(val)), { message: "Invalid date" }),
+  requiredFormats: z.array(z.enum(['Video', 'PDF', 'Word', 'Excel', 'Text'])).min(1, "Select at least one format"),
   candidateIds: z.string().min(1, "Select at least one candidate ID (comma separated)").transform(val => val.split(',').map(v => parseInt(v.trim())).filter(v => !isNaN(v)))
 });
 
@@ -38,7 +39,7 @@ export default function AdminTasks() {
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema),
-    defaultValues: { title: "", description: "", deadline: "", candidateIds: "" as any }
+    defaultValues: { title: "", description: "", deadline: "", requiredFormats: [], candidateIds: "" as any }
   });
 
   const reviewForm = useForm<z.infer<typeof reviewSchema>>({
@@ -113,6 +114,31 @@ export default function AdminTasks() {
                       <FormMessage />
                     </FormItem>
                   )} />
+                  <FormField control={form.control} name="requiredFormats" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Required Submission Formats</FormLabel>
+                      <div className="space-y-3">
+                        {['Video', 'PDF', 'Word', 'Excel', 'Text'].map(fmt => (
+                          <div key={fmt} className="flex items-center space-x-2">
+                            <input 
+                              type="checkbox" 
+                              id={fmt}
+                              checked={field.value?.includes(fmt as any) || false}
+                              onChange={(e) => {
+                                const newValue = e.target.checked 
+                                  ? [...(field.value || []), fmt] 
+                                  : (field.value || []).filter(v => v !== fmt);
+                                field.onChange(newValue);
+                              }}
+                              className="w-4 h-4 rounded border-white/20 bg-black/20 cursor-pointer"
+                            />
+                            <label htmlFor={fmt} className="text-sm font-medium cursor-pointer">{fmt}</label>
+                          </div>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
                   <FormField control={form.control} name="candidateIds" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Assign to Candidate IDs (comma separated)</FormLabel>
@@ -152,7 +178,17 @@ export default function AdminTasks() {
                   </div>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <p className="text-sm text-muted-foreground mb-6">{task.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{task.description}</p>
+                  {task.requiredFormats && task.requiredFormats.length > 0 && (
+                    <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                      <p className="text-xs font-semibold text-blue-400 mb-2">Required Formats:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {task.requiredFormats.map((fmt: string) => (
+                          <Badge key={fmt} variant="secondary" className="bg-blue-500/20 text-blue-300">{fmt}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
                   {task.status === 'SUBMITTED' && (
                     <Dialog open={reviewOpen === task.id} onOpenChange={(val) => setReviewOpen(val ? task.id : null)}>
