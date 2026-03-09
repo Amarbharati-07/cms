@@ -1,0 +1,251 @@
+Build a full-stack web application called "FieldTrack" — a government-grade candidate monitoring platform. Here are the complete requirements:
+
+---
+
+## TECH STACK
+- Frontend: React.js with Tailwind CSS
+- Backend: Node.js + Express.js
+- Database: PostgreSQL with Prisma ORM
+- File Storage: Local multer storage (with AWS S3 ready structure)
+- Auth: JWT (JSON Web Tokens) with bcrypt password hashing
+- PDF Export: jsPDF or pdfmake
+
+---
+
+## USER ROLES
+Two roles: ADMIN and CANDIDATE
+
+---
+
+## PAGES & FEATURES
+
+### AUTH
+- Login page (email + password)
+- Admin can create candidate accounts (no public signup)
+- JWT stored in httpOnly cookies
+- Role-based route protection
+
+---
+
+### ADMIN PANEL
+
+**Dashboard:**
+- Overview cards: Total candidates (20), States covered (6), Tasks assigned, Tasks completed, Pending reviews
+- Candidate list filtered by state (dropdown)
+- Task completion percentage bar per candidate
+
+**Candidate Management:**
+- View all 20 candidates in a table
+- Click candidate → view full profile
+- Edit candidate details
+- See candidate's state, tasks, submissions, attendance
+
+**Task Management:**
+- Create task: title, description, deadline, assign to one or multiple candidates
+- View all tasks with status (Pending / Submitted / Approved / Rejected)
+- Click task → view submission proof (photo/video), timestamp, GPS coordinates
+- Approve or Reject submission with optional comment
+
+**Attendance Monitoring:**
+- View attendance log per candidate (date, photo, GPS, timestamp)
+- Filter by date range and state
+
+**Reports:**
+- Generate PDF report per candidate: profile + tasks + attendance + submission metadata
+- Report includes: file hash, GPS coordinates, timestamp, approval status
+- Digital-signature-ready report footer
+
+**Notifications Panel:**
+- View all system notifications (task assigned, submitted, approved/rejected)
+
+---
+
+### CANDIDATE PANEL
+
+**Profile Page:**
+- Fields: Full name, age, state (dropdown: 6 states), contact number, email, address
+- Education details, achievements, bio
+- Upload: profile photo, resume (PDF), certificates
+- Profile completion percentage bar
+
+**My Tasks:**
+- List of assigned tasks with deadline and status badge
+- Click task → view description → Upload proof (photo/video)
+- On upload: system auto-captures timestamp (server-side) + prompts GPS capture (via browser geolocation API)
+- Submit proof button
+- View approval status and admin comment
+
+**Attendance:**
+- Mark attendance button → opens camera or file upload
+- System captures timestamp + GPS on submission
+- View personal attendance history
+
+**My Progress:**
+- Task completion stats
+- Attendance rate
+- Recent activity timeline
+
+**Notifications:**
+- List of alerts: task assigned, deadline reminders, approval status
+
+---
+
+## DATABASE SCHEMA
+
+Create these Prisma models:
+```prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(CANDIDATE)
+  profile   CandidateProfile?
+  tasks     Task[]   @relation("AssignedTasks")
+  submissions Submission[]
+  attendance  Attendance[]
+  notifications Notification[]
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  CANDIDATE
+}
+
+model CandidateProfile {
+  id           Int    @id @default(autoincrement())
+  userId       Int    @unique
+  user         User   @relation(fields: [userId], references: [id])
+  fullName     String
+  age          Int?
+  state        String
+  phone        String?
+  address      String?
+  education    String?
+  achievements String?
+  bio          String?
+  profilePhoto String?
+  resume       String?
+  certificates String[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  deadline    DateTime
+  status      TaskStatus @default(PENDING)
+  assignedTo  User[]   @relation("AssignedTasks")
+  submissions Submission[]
+  createdAt   DateTime @default(now())
+}
+
+enum TaskStatus {
+  PENDING
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model Submission {
+  id             Int      @id @default(autoincrement())
+  taskId         Int
+  task           Task     @relation(fields: [taskId], references: [id])
+  candidateId    Int
+  candidate      User     @relation(fields: [candidateId], references: [id])
+  fileUrl        String
+  fileHash       String
+  fileType       String
+  timestamp      DateTime @default(now())
+  latitude       Float?
+  longitude      Float?
+  approvalStatus TaskStatus @default(SUBMITTED)
+  adminComment   String?
+}
+
+model Attendance {
+  id          Int      @id @default(autoincrement())
+  candidateId Int
+  candidate   User     @relation(fields: [candidateId], references: [id])
+  photoUrl    String
+  timestamp   DateTime @default(now())
+  latitude    Float?
+  longitude   Float?
+  date        DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+```
+
+---
+
+## API ROUTES
+
+### Auth
+- POST /api/auth/login
+- POST /api/auth/logout
+- GET /api/auth/me
+
+### Admin
+- POST /api/admin/candidates — create candidate account
+- GET /api/admin/candidates — list all candidates
+- GET /api/admin/candidates/:id — candidate detail
+- PUT /api/admin/candidates/:id — edit candidate
+- POST /api/admin/tasks — create task
+- GET /api/admin/tasks — list all tasks
+- PUT /api/admin/tasks/:id/review — approve/reject submission
+- GET /api/admin/attendance — all attendance logs
+- GET /api/admin/reports/:candidateId — generate PDF report
+
+### Candidate
+- GET /api/candidate/profile — get own profile
+- PUT /api/candidate/profile — update profile
+- POST /api/candidate/profile/upload — upload documents
+- GET /api/candidate/tasks — get assigned tasks
+- POST /api/candidate/tasks/:id/submit — submit proof
+- POST /api/candidate/attendance — mark attendance
+- GET /api/candidate/attendance — own attendance logs
+- GET /api/candidate/notifications — get notifications
+
+---
+
+## SECURITY & INTEGRITY
+- Hash every uploaded file with SHA-256 and store hash in DB
+- All timestamps must be server-side (never trust client time)
+- GPS coordinates captured via browser Geolocation API on candidate side
+- JWT middleware to protect all routes
+- Role-based middleware: adminOnly and candidateOnly
+- All file uploads validated: images (jpg/png) and videos (mp4) only, max 50MB
+- HTTPS-ready (use helmet.js and cors)
+
+---
+
+## UI DESIGN
+- Clean, professional dashboard design
+- Dark sidebar navigation
+- Admin sidebar links: Dashboard, Candidates, Tasks, Attendance, Reports, Notifications
+- Candidate sidebar links: Profile, My Tasks, Attendance, Progress, Notifications
+- Status badges: color-coded (Pending=yellow, Submitted=blue, Approved=green, Rejected=red)
+- Responsive design (mobile friendly)
+- Use react-router-dom for routing
+- Use axios for API calls
+- Use react-toastify for notifications
+
+---
+
+## SEED DATA
+Create a seed script that:
+- Creates 1 admin account: admin@fieldtrack.com / Admin@123
+- Creates 20 candidate accounts across 6 states (Rajasthan, Maharashtra, Gujarat, UP, MP, Bihar)
+- Each candidate has a basic profile pre-filled
+
+---
+
+## FOLDER STRUCTURE
