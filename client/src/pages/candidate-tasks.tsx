@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCandidateTasks, useCandidateSubmitTask } from "@/hooks/use-candidate";
 import { useGeolocation } from "@/hooks/use-geolocation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, UploadCloud, Calendar, MapPin, CheckCircle2 } from "lucide-react";
+import { Loader2, UploadCloud, Calendar, MapPin, CheckCircle2, CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
