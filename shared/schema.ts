@@ -1,18 +1,108 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, json, doublePrecision } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
+
+export const roles = ['ADMIN', 'CANDIDATE'] as const;
 
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  role: text("role", { enum: ['ADMIN', 'CANDIDATE'] }).notNull().default('CANDIDATE'),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const candidateProfiles = pgTable("candidate_profiles", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  fullName: text("full_name").notNull(),
+  age: integer("age"),
+  state: text("state").notNull(),
+  phone: text("phone"),
+  address: text("address"),
+  education: text("education"),
+  achievements: text("achievements"),
+  bio: text("bio"),
+  profilePhoto: text("profile_photo"),
+  resume: text("resume"),
+  certificates: json("certificates").$type<string[]>(),
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
+export const tasks = pgTable("tasks", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  deadline: timestamp("deadline").notNull(),
+  status: text("status", { enum: ['PENDING', 'SUBMITTED', 'APPROVED', 'REJECTED'] }).notNull().default('PENDING'),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const assignedTasks = pgTable("assigned_tasks", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull().references(() => tasks.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+});
+
+export const submissions = pgTable("submissions", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull().references(() => tasks.id),
+  candidateId: integer("candidate_id").notNull().references(() => users.id),
+  fileUrl: text("file_url").notNull(),
+  fileHash: text("file_hash").notNull(),
+  fileType: text("file_type").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  approvalStatus: text("approval_status", { enum: ['PENDING', 'SUBMITTED', 'APPROVED', 'REJECTED'] }).notNull().default('SUBMITTED'),
+  adminComment: text("admin_comment"),
+});
+
+export const attendance = pgTable("attendance", {
+  id: serial("id").primaryKey(),
+  candidateId: integer("candidate_id").notNull().references(() => users.id),
+  photoUrl: text("photo_url").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  date: timestamp("date").defaultNow(),
+});
+
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  message: text("message").notNull(),
+  read: boolean("read").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Relationships
+export const usersRelations = relations(users, ({ one, many }) => ({
+  profile: one(candidateProfiles, {
+    fields: [users.id],
+    references: [candidateProfiles.userId],
+  }),
+  assignedTasks: many(assignedTasks),
+  submissions: many(submissions),
+  attendance: many(attendance),
+  notifications: many(notifications),
+}));
+
+export const tasksRelations = relations(tasks, ({ many }) => ({
+  assignedTo: many(assignedTasks),
+  submissions: many(submissions),
+}));
+
+export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
+export const insertCandidateProfileSchema = createInsertSchema(candidateProfiles).omit({ id: true });
+export const insertTaskSchema = createInsertSchema(tasks).omit({ id: true, createdAt: true, status: true });
+export const insertSubmissionSchema = createInsertSchema(submissions).omit({ id: true, timestamp: true, approvalStatus: true });
+export const insertAttendanceSchema = createInsertSchema(attendance).omit({ id: true, timestamp: true, date: true });
+
 export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type CandidateProfile = typeof candidateProfiles.$inferSelect;
+export type Task = typeof tasks.$inferSelect;
+export type Submission = typeof submissions.$inferSelect;
+export type Attendance = typeof attendance.$inferSelect;
+export type Notification = typeof notifications.$inferSelect;
