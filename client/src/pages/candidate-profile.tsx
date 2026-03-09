@@ -70,31 +70,31 @@ export default function CandidateProfile() {
 
   return (
     <Layout>
-      <div className="space-y-8 animate-in fade-in duration-500">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-primary to-blue-600 flex items-center justify-center shadow-xl shadow-primary/20 border-2 border-white/10">
-              <UserCircle className="w-12 h-12 text-white" />
+      <Form {...form}>
+        <div className="space-y-8 animate-in fade-in duration-500">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="flex items-center gap-6">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-primary to-blue-600 flex items-center justify-center shadow-xl shadow-primary/20 border-2 border-white/10">
+                <UserCircle className="w-12 h-12 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold font-display text-gradient mb-1">{profile?.fullName || "Your Profile"}</h1>
+                <p className="text-muted-foreground flex items-center gap-2"><MapPin className="w-4 h-4"/> {profile?.state || "No location set"}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-4xl font-bold font-display text-gradient mb-1">{profile?.fullName || "Your Profile"}</h1>
-              <p className="text-muted-foreground flex items-center gap-2"><MapPin className="w-4 h-4"/> {profile?.state || "No location set"}</p>
-            </div>
+            <Button onClick={() => form.handleSubmit(onSubmit)()} disabled={isPending} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20">
+              {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+              Save Changes
+            </Button>
           </div>
-          <Button onClick={() => form.handleSubmit(onSubmit)()} disabled={isPending} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20">
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-            Save Changes
-          </Button>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2 glass-panel border-white/5">
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>Update your personal and contact details.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <Card className="lg:col-span-2 glass-panel border-white/5">
+              <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>Update your personal and contact details.</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <form className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField control={form.control} name="fullName" render={({ field }) => (
@@ -117,39 +117,39 @@ export default function CandidateProfile() {
                     <FormItem><FormLabel>Bio / About Me</FormLabel><FormControl><Textarea className="bg-black/20 resize-none h-24" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                 </form>
-              </Form>
-            </CardContent>
-          </Card>
-
-          <div className="space-y-8">
-            <Card className="glass-panel border-white/5">
-              <CardHeader className="pb-4 border-b border-white/5">
-                <CardTitle className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-blue-400" /> Education</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <FormField control={form.control} name="education" render={({ field }) => (
-                  <FormItem>
-                    <FormControl><Textarea placeholder="Highest degree, university..." className="bg-black/20 resize-none h-24" {...field} /></FormControl>
-                  </FormItem>
-                )} />
               </CardContent>
             </Card>
 
-            <Card className="glass-panel border-white/5">
-              <CardHeader className="pb-4 border-b border-white/5">
-                <CardTitle className="flex items-center gap-2"><Award className="w-5 h-5 text-amber-400" /> Achievements</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <FormField control={form.control} name="achievements" render={({ field }) => (
-                  <FormItem>
-                    <FormControl><Textarea placeholder="Awards, certifications, notable projects..." className="bg-black/20 resize-none h-24" {...field} /></FormControl>
-                  </FormItem>
-                )} />
-              </CardContent>
-            </Card>
+            <div className="space-y-8">
+              <Card className="glass-panel border-white/5">
+                <CardHeader className="pb-4 border-b border-white/5">
+                  <CardTitle className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-blue-400" /> Education</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <FormField control={form.control} name="education" render={({ field }) => (
+                    <FormItem>
+                      <FormControl><Textarea placeholder="Highest degree, university..." className="bg-black/20 resize-none h-24" {...field} /></FormControl>
+                    </FormItem>
+                  )} />
+                </CardContent>
+              </Card>
+
+              <Card className="glass-panel border-white/5">
+                <CardHeader className="pb-4 border-b border-white/5">
+                  <CardTitle className="flex items-center gap-2"><Award className="w-5 h-5 text-amber-400" /> Achievements</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <FormField control={form.control} name="achievements" render={({ field }) => (
+                    <FormItem>
+                      <FormControl><Textarea placeholder="Awards, certifications, notable projects..." className="bg-black/20 resize-none h-24" {...field} /></FormControl>
+                    </FormItem>
+                  )} />
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
+      </Form>
     </Layout>
   );
 }
